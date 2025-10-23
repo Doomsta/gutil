@@ -22,3 +22,19 @@ func TestClamp(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkClamp(b *testing.B) {
+	tests := [][4]int{
+		{0, 0, 0, 0},
+		{0, 22, 10, 10},
+		{5, 0, 10, 5},
+		{5, 100, 10, 10},
+		{53333, 100, 10, 100},
+		{53333, 9, 10, 10},
+	}
+	for b.Loop() {
+		for _, tt := range tests {
+			Clamp(tt[0], tt[1], tt[2])
+		}
+	}
+}

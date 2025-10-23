@@ -2,23 +2,23 @@ package gutil
 
 import "unicode/utf8"
 
+type Ordered interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+	~float32 | ~float64
+}
+
 // Clamp returns min if v is less than min, max if v is greater than max, otherwise v.
 // This function is used to clamp a value to a range.
 // Based on CSS clamp function.
 // https://developer.mozilla.org/en-US/docs/Web/CSS/clamp
 // Example:
 // 	Clamp(10, 0, 20) // returns 10
-func Clamp(min, v, max int) int {
-	if min > max {
-		min, max = max, min
+func Clamp[T Ordered](minV, v, maxV T) T {
+	if minV > maxV {
+		minV, maxV = maxV, minV
 	}
-	if v < min {
-		return min
-	}
-	if v > max {
-		return max
-	}
-	return v
+	return max(minV, min(v, maxV))
 }
 
 func HasNonASCII(s string) bool {
